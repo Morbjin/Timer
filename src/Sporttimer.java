@@ -93,7 +93,7 @@ public class Sporttimer extends JFrame implements ActionListener{
 		button_pause.setText("Play/Pause");
 		button_pause.setIcon(image_icon1 = new ImageIcon("2"));
 		panel1.add(button_pause);
-		// GO Button
+		// GO Button - soll TImer starten
 		button_go = new JButton();
 		button_go.addActionListener(this);
 		button_go.setText("GO");
