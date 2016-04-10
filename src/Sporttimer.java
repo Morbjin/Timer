@@ -1,4 +1,7 @@
 import java.awt.BorderLayout;
+
+import javax.swing.text.DefaultEditorKit.BeepAction;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -21,6 +24,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JSlider;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.plaf.IconUIResource;
 import javax.swing.plaf.basic.BasicArrowButton;
@@ -29,7 +33,6 @@ import java.sql.Time;
 
 
 public class Sporttimer extends JFrame implements ActionListener{
-
 	/**
 	 * 
 	 */
@@ -40,6 +43,7 @@ public class Sporttimer extends JFrame implements ActionListener{
 	public int countdown;
 	private int intervall;
 	private int ticks;
+	private int[] tick_list;
 	
 	// Crap Element
 	public BasicArrowButton b1 ;
@@ -53,6 +57,8 @@ public class Sporttimer extends JFrame implements ActionListener{
 	public JMenuItem m_item1;
 	public JMenuItem m_item2;
 	public JTextField text1;
+	public JTextField text_input_east;
+	public JTextArea text_area_input;
 	public JLabel label_west_1;
 	public JLabel label_east_1;
 	public JLabel label_center_timer;
@@ -75,14 +81,19 @@ public class Sporttimer extends JFrame implements ActionListener{
 	private JButton button_get_text_list;
 	
 	public JOptionPane pane_reset;
+	private BeepAction beep;
 	
 	
 	public Sporttimer(){
 		super("Timer-App");
-		
 		//this.add( JList<String> list1 = new JList<String>(list_1) );
-		this.intervall =  2;
-		this.ticks = 5;
+		    
+		//Eigene Attribute
+		this.intervall = 40;
+		this.ticks = 30;
+		this.pause = 10;
+		this.tick_list = new int[]{ticks,pause,ticks};
+		
 		
 		//	GridLayout
 		//
@@ -109,27 +120,36 @@ public class Sporttimer extends JFrame implements ActionListener{
 		panel_page_end.setLayout(new FlowLayout());
 		// Center Panel
 		panel_center = new JPanel();
-		panel_center.setBackground(Color.DARK_GRAY);
+		panel_center.setBackground(Color.PINK);
 		panel_center.setLayout(new FlowLayout());
 		// Center Panel
 		panel_east = new JPanel();
 		panel_east.setBackground(Color.blue);
+		panel_east.setLayout(new FlowLayout());
 		// Center Panel
 		panel_west = new JPanel();
 		panel_west.setBackground(Color.red);
+		panel_west.setLayout(new FlowLayout());
 		// Center Panel
 		panel_north = new JPanel();
 		panel_north.setBackground(Color.GREEN);
+		panel_north.setLayout(new FlowLayout());
 		// Center Panel
 		panel_south = new JPanel();
 		panel_south.setBackground(Color.yellow);
+		panel_south.setLayout(new FlowLayout());
 		
 		// Texteingabe
-		text1 = new JTextField("Textfeld EAST: ");
+		text1 = new JTextField("Text:",5);
+		text_input_east = new JTextField("Textfeld EAST:");
+		text_area_input = new JTextArea(5,1);
+		panel_east.add(text_area_input);
 		panel_east.add(text1);
+		panel_east.add(text_input_east);
 		
 		// Label, nehmen normal String Inhalte, ggf via Setter
 		label_west_1 = new JLabel("LABEL: ");
+		jlist_1 = new JList<String>();
 		this.panel_west.add(label_west_1);
 		label_east_1 = new JLabel("Label East: ");
 		this.panel_east.add(label_east_1);
@@ -160,7 +180,7 @@ public class Sporttimer extends JFrame implements ActionListener{
 		this.panel_north.add(button_get_text_list);
 		
 		
-		String[] list_1 = {"Bitte wählen","Übung 1", "Übung 2"}; 
+		String[] list_1 = {"Bitte wählen","Ohja!", "Übung 2"}; 
 		combo = new JComboBox<String>(list_1);
 		this.combo.setPreferredSize(new Dimension(100,20));
 		this.panel_center.add(combo);
@@ -188,55 +208,65 @@ public class Sporttimer extends JFrame implements ActionListener{
 		setBounds(1300, 530, 600, 400);
 	}
 		
-	
-	public void start_timer_loop(){
-		while(this.intervall != 0){
-			this.intervall--;
-			this.doTick();
-			try {
-				Thread.sleep(this.intervall*1000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+	public void start_timer(){
+		for (int i = 0; i < this.tick_list.length ; i++ ){
+			System.out.println("Nächster Intervall: "+tick_list[i]);
+			this.doTick(tick_list[i]);
+
 			}
-		}	
-		System.out.println("Timer abgelaufen!");	
-	}
-	
-	public void doTick(){
-		System.out.println("Sekunden verbleibend: " + this.ticks);
-		while (this.ticks != 0){
-			try {
-				System.out.println("Ticks vor SLeep: " + this.ticks);
-				Thread.sleep(1000);
-				this.ticks--;
-				System.out.println("Ticks nach SLeep: " + this.ticks);
-				//label_center_timer.setText();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
+		System.out.println("Timer abgelaufen!");
 		}
-		System.out.println(this.ticks);
+	
+
+	
+	public void doTick(int ticks){
+		System.out.println("Sekunden verbleibend: " + ticks);
+		while (ticks != 0){
+			try {
+				label_center_timer.setText(String.valueOf(ticks));
+				doBeep();
+				System.out.println("Ticks vor SLeep: " + ticks);
+				Thread.sleep(1000);
+				//if (this.ticks <= 3){
+				//	beep = new BeepAction();
+				//	this.ticks--;
+				//}
+				ticks--;
+				System.out.println("Ticks nach SLeep: " + ticks);
+				//Nicht in jedem Loop wird aktualisiert -.-"
+				
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}	
+		}
 	}
+	public void doBeep(){
+		new BeepAction();
+		
+	}	
 	
 	public void actionPerformed(ActionEvent ev) {
 		if(ev.getSource()==button_pause){
 			System.out.println("Hallo Welt!");
 			label_west_1.setText(text1.getText());
+			//jlist_1.setListData(text_area_input.getText());
 			//System.exit(0);
+			doBeep();
 		}else if(ev.getSource()==m_item2){
 			System.out.println("Bis bald!");
 			System.exit(0);
 		}else if(ev.getSource()==m_item1){
 			System.out.println(list_1);
+			//start_timer_loop();
 		}else if(ev.getSource()==button_stop){
 			System.exit(0);
 		}else if(ev.getSource()==button_go){
-			this.start_timer_loop();
+			this.start_timer();
 		}else if(ev.getSource()==button_get_text_list){
-			this.label_west_1.setText(this.text1.getText());
+			this.label_west_1.setText(this.text_area_input.getText());
+		}else if(ev.getSource()==button_get_text_list){
+			//this.jlist_1.se(this.text_area_input.getText());
 		}
 		
 	}	
