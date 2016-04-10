@@ -1,4 +1,5 @@
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -51,7 +52,8 @@ public class Sporttimer extends JFrame implements ActionListener{
 	public JLabel label1;
 	public String[] list_1;
 	public JList<String> jlist_1;
-	public JPanel panel1;
+	public JPanel panel_page_end;
+	public JPanel panel_center;
 	public Icon icon_1;
 	public ImageIcon image_icon1;
 	private JComboBox<String> combo;
@@ -74,7 +76,7 @@ public class Sporttimer extends JFrame implements ActionListener{
 		//
 		//
 		//setLayout(new GridLayout(2,3));
-		setLayout(new BorderLayout());
+		setLayout(new BorderLayout(5, 5));
 		JMenuBar bar = new JMenuBar();
 		
 		this.setJMenuBar(bar);
@@ -90,36 +92,40 @@ public class Sporttimer extends JFrame implements ActionListener{
 		m_item2.addActionListener(this);
 		
 		// Button Panel
-		panel1 = new JPanel();
+		panel_page_end = new JPanel();
+		// Center Panel
+		panel_center = new JPanel();
 		
 		// Pause Button
 		button_pause = new JButton();
 		button_pause.addActionListener(this);
 		button_pause.setText("Play/Pause");
 		button_pause.setIcon(image_icon1 = new ImageIcon("2"));
-		panel1.add(button_pause);
-		
+		this.panel_page_end.add(button_pause);
 		// GO Button - soll TImer starten
 		button_go = new JButton();
 		button_go.addActionListener(this);
 		button_go.setText("GO");
-		panel1.add(button_go);
-		
+		this.panel_page_end.add(button_go);
 		// STOP Button - Hält Timer an
 		button_stop = new JButton();
 		button_stop.addActionListener(this);
 		button_stop.setText("STOP");
-		panel1.add(button_stop);
+		this.panel_page_end.add(button_stop);
 		
-		String[] list_1 = new String[]{"Bitte wählen","Übung 1", "Übung 2"}; 
+		String[] list_1 = {"Bitte wählen","Übung 1", "Übung 2"}; 
 		combo = new JComboBox<String>(list_1);
+		this.combo.setPreferredSize(new Dimension(100,20));
+		
 		
 		
 		// Elemente in Rheinfolge zusammenfügen 
-		this.add(panel1, BorderLayout.PAGE_END);
-		this.add(label1 = new JLabel("LABEL"), BorderLayout.CENTER);
+		this.add(panel_page_end, BorderLayout.PAGE_END);
+		this.panel_center.add(combo);
+		this.add(panel_center, BorderLayout.CENTER);
+		this.add(label1 = new JLabel("LABEL"), BorderLayout.WEST);
 		this.add(text1 = new JTextField("Textfeld"), BorderLayout.EAST);
-		this.add(combo, BorderLayout.CENTER);
+		//this.add(combo, BorderLayout.CENTER);
 		
 		// Bisher unnützes Object, fehlt Container?
 		b1 = new BasicArrowButton(1);
@@ -131,18 +137,17 @@ public class Sporttimer extends JFrame implements ActionListener{
 		setBounds(1300, 530, 600, 400);
 	}
 		
-		
-	
-	public int setIntervall(){
-		return this.countdown;
-	}
 	
 	public void start_timer_loop(int intervall){
-		for (int i=0;i<intervall;i--){
-			try {
-				this.doTick();
-			} catch (Exception e) {
-				// TODO: handle exception
+		for (int i=intervall;i <= 0;i--){
+			if (i != 0){
+				try {
+					this.doTick();
+				} catch (Exception e) {
+					// TODO: handle exception
+				}	
+			}else{
+				System.out.println("## Timer Ende! ##");
 			}
 		}
 	}
@@ -150,8 +155,8 @@ public class Sporttimer extends JFrame implements ActionListener{
 	public int doTick(){
 		this.ticks -= 1;
 		if(this.ticks <= 0){
+			return this.ticks;
 		}else{
-			
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
