@@ -26,23 +26,25 @@ import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JSlider;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.border.Border;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.plaf.IconUIResource;
 import javax.swing.plaf.basic.BasicArrowButton;
 
 import java.sql.Time;
 
 
-public class Sporttimer extends JFrame implements ActionListener{
+public class Sporttimer extends JFrame implements ActionListener, DocumentListener{
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1;
 	
 	//Object Attribute
-	public int pause;
-	public int countdown;
+	private int pause;
 	private int intervall;
-	private int ticks;
+	private  int ticks;
 	private int[] tick_list;
 	
 	// Crap Element
@@ -57,10 +59,16 @@ public class Sporttimer extends JFrame implements ActionListener{
 	public JMenuItem m_item1;
 	public JMenuItem m_item2;
 	public JTextField text1;
-	public JTextField text_input_east;
+	public JTextField text_input_east_1;
+	public JTextField text_input_east_2;
+	public JTextField text_input_east_3;
 	public JTextArea text_area_input;
 	public JLabel label_west_1;
+	public JLabel label_west_2;
+	public JLabel label_west_3;
 	public JLabel label_east_1;
+	public JLabel label_east_2;
+	public JLabel label_east_3;
 	public JLabel label_center_timer;
 	public String[] list_1;
 	public JList<String> jlist_1;
@@ -114,7 +122,7 @@ public class Sporttimer extends JFrame implements ActionListener{
 		menu_main.add(m_item2 = new JMenuItem("Schlieﬂen"));
 		m_item2.addActionListener(this);
 		
-		// Button Panel mit Farbzuweiseung
+		// page_end Panel mit Farbzuweiseung
 		panel_page_end = new JPanel();
 		panel_page_end.setBackground(Color.white);
 		panel_page_end.setLayout(new FlowLayout());
@@ -122,37 +130,57 @@ public class Sporttimer extends JFrame implements ActionListener{
 		panel_center = new JPanel();
 		panel_center.setBackground(Color.PINK);
 		panel_center.setLayout(new FlowLayout());
-		// Center Panel
+		// east Panel
 		panel_east = new JPanel();
 		panel_east.setBackground(Color.blue);
-		panel_east.setLayout(new FlowLayout());
-		// Center Panel
-		panel_west = new JPanel();
+		panel_east.setLayout(new BorderLayout());
+		// west Panel
+		panel_west = new JPanel(new BorderLayout());
 		panel_west.setBackground(Color.red);
-		panel_west.setLayout(new FlowLayout());
-		// Center Panel
+		// North Panel
 		panel_north = new JPanel();
 		panel_north.setBackground(Color.GREEN);
 		panel_north.setLayout(new FlowLayout());
-		// Center Panel
+		// South Panel
 		panel_south = new JPanel();
 		panel_south.setBackground(Color.yellow);
 		panel_south.setLayout(new FlowLayout());
 		
 		// Texteingabe
 		text1 = new JTextField("Text:",5);
-		text_input_east = new JTextField("Textfeld EAST:");
-		text_area_input = new JTextArea(5,1);
-		panel_east.add(text_area_input);
-		panel_east.add(text1);
-		panel_east.add(text_input_east);
+		text_input_east_1 = new JTextField("2",5);
+		text_input_east_2 = new JTextField("1",5);
+		text_input_east_3 = new JTextField("2",5);
+		text_area_input = new JTextArea(5,10);
+		text_area_input.getDocument().addDocumentListener(this);
 		
-		// Label, nehmen normal String Inhalte, ggf via Setter
-		label_west_1 = new JLabel("LABEL: ");
-		jlist_1 = new JList<String>();
-		this.panel_west.add(label_west_1);
-		label_east_1 = new JLabel("Label East: ");
-		this.panel_east.add(label_east_1);
+		// EAST Panel aufbau
+		this.panel_east.add(text_area_input, BorderLayout.CENTER);
+		//this.panel_east.add(text1);
+		label_east_1 = new JLabel("Intervall-Dauer: ");
+		this.panel_east.add(label_east_1, BorderLayout.WEST);
+		this.panel_east.add(text_input_east_1, BorderLayout.EAST);
+		
+		label_east_2 = new JLabel("Intervall-Anzahl: ");
+		this.panel_east.add(label_east_2, BorderLayout.WEST);
+		this.panel_east.add(text_input_east_2, BorderLayout.EAST);
+		
+		label_east_3 = new JLabel("Pause-Dauer: ");
+		this.panel_east.add(label_east_3, BorderLayout.WEST);
+		this.panel_east.add(text_input_east_3, BorderLayout.EAST);
+		
+		
+		// WEST Panel aufbau
+		this.label_west_1 = new JLabel("Dauer");
+		this.label_west_2 = new JLabel("Anzahl");
+		this.label_west_3 = new JLabel("Pausen_dauer");
+		this.jlist_1 = new JList<String>(list_1);
+		
+		this.panel_west.add(label_west_1, BorderLayout.WEST);
+		this.panel_west.add(label_west_2, BorderLayout.WEST);
+		this.panel_west.add(label_west_3, BorderLayout.WEST);
+
+		// CENTER Panel aufbau
 		label_center_timer = new JLabel("Beginne mit Klick auf GO!");
 		this.panel_center.add(label_center_timer);
 		
@@ -172,7 +200,6 @@ public class Sporttimer extends JFrame implements ActionListener{
 		button_stop.addActionListener(this);
 		button_stop.setText("STOP");
 		this.panel_page_end.add(button_stop);
-		
 		// STOP Button - H‰lt Timer an
 		button_get_text_list = new JButton();
 		button_get_text_list.addActionListener(this);
@@ -264,7 +291,13 @@ public class Sporttimer extends JFrame implements ActionListener{
 		}else if(ev.getSource()==button_go){
 			this.start_timer();
 		}else if(ev.getSource()==button_get_text_list){
-			this.label_west_1.setText(this.text_area_input.getText());
+			this.label_west_1.setText(this.text_input_east_1.getText());
+			this.getToolkit().beep();
+			this.ticks=Integer.parseInt(this.text_input_east_1.getText());
+			this.label_west_2.setText(this.text_input_east_2.getText());
+			this.intervall=Integer.parseInt(this.text_input_east_2.getText());
+			this.label_west_3.setText(this.text_input_east_3.getText());
+			this.pause=Integer.parseInt(this.text_input_east_3.getText());
 		}else if(ev.getSource()==button_get_text_list){
 			//this.jlist_1.se(this.text_area_input.getText());
 		}
@@ -276,6 +309,25 @@ public class Sporttimer extends JFrame implements ActionListener{
 	 
 		new Sporttimer();
 			
+	}
+
+	@Override
+	public void changedUpdate(DocumentEvent e) {
+		//e.getChange(text_area_input);
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void insertUpdate(DocumentEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void removeUpdate(DocumentEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	
