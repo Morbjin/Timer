@@ -113,12 +113,14 @@ public class Sporttimer extends JFrame implements ActionListener{
 		
 		String[] list_1 = new String[]{"Bitte wählen","Übung 1", "Übung 2"}; 
 		combo = new JComboBox<String>(list_1);
-		this.add(combo, BorderLayout.CENTER);
+		
 		
 		// Elemente in Rheinfolge zusammenfügen 
 		this.add(panel1, BorderLayout.PAGE_END);
 		this.add(label1 = new JLabel("LABEL"), BorderLayout.CENTER);
 		this.add(text1 = new JTextField("Textfeld"), BorderLayout.EAST);
+		this.add(combo, BorderLayout.CENTER);
+		
 		// Bisher unnützes Object, fehlt Container?
 		b1 = new BasicArrowButton(1);
 		
@@ -183,7 +185,7 @@ public class Sporttimer extends JFrame implements ActionListener{
 
 	public static void main(String[] args){
 	 
-		new Sporttimer(10, 2);
+		new Sporttimer(5, 2);
 			
 	}
 
