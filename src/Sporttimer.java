@@ -98,7 +98,7 @@ public class Sporttimer extends JFrame implements ActionListener{
 		button_go.addActionListener(this);
 		button_go.setText("GO");
 		panel1.add(button_go);
-		// STOP Button
+		// STOP Button - Hält Timer an
 		button_stop = new JButton();
 		button_stop.addActionListener(this);
 		button_stop.setText("STOP");
