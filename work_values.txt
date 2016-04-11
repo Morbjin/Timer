@@ -1,0 +1,6 @@
+{	
+	"Übung":"Burpee",
+	"ticks":"30",
+	"interval":"3"
+	"pause":"5"
+}
