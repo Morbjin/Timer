@@ -315,7 +315,7 @@ public class Sporttimer extends JFrame implements ActionListener, DocumentListen
 			this.start_timer();
 		}else if(ev.getSource()==button_get_text_list){
 			this.label_west_1.setText(this.text_input_east_1.getText());
-			doBeep();
+			new Beeper();
 			this.ticks=Integer.parseInt(this.text_input_east_1.getText());
 			this.intervall=Integer.parseInt(this.text_input_east_2.getText());
 			this.pause=Integer.parseInt(this.text_input_east_3.getText());
