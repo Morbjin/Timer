@@ -31,6 +31,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.plaf.IconUIResource;
 import javax.swing.plaf.basic.BasicArrowButton;
+import javax.swing.border.TitledBorder;
 
 import java.sql.Time;
 
@@ -66,6 +67,9 @@ public class Sporttimer extends JFrame implements ActionListener, DocumentListen
 	public JLabel label_west_1;
 	public JLabel label_west_2;
 	public JLabel label_west_3;
+	public JLabel label_west_4;
+	public JLabel label_west_5;
+	public JLabel label_west_6;
 	public JLabel label_east_1;
 	public JLabel label_east_2;
 	public JLabel label_east_3;
@@ -74,6 +78,9 @@ public class Sporttimer extends JFrame implements ActionListener, DocumentListen
 	public JList<String> jlist_1;
 	public JPanel panel_page_end;
 	public JPanel panel_center;
+	public JPanel panel_center_1;
+	public JPanel panel_center_2;
+	public JPanel panel_center_3;
 	public JPanel panel_east;
 	public JPanel panel_west;
 	public JPanel panel_north;
@@ -122,29 +129,37 @@ public class Sporttimer extends JFrame implements ActionListener, DocumentListen
 		menu_main.add(m_item2 = new JMenuItem("Schließen"));
 		m_item2.addActionListener(this);
 		
+		panel_center = new JPanel(new FlowLayout());
 		// page_end Panel mit Farbzuweiseung
 		panel_page_end = new JPanel();
 		panel_page_end.setBackground(Color.white);
 		panel_page_end.setLayout(new FlowLayout());
 		// Center Panel
-		panel_center = new JPanel();
-		panel_center.setBackground(Color.PINK);
-		panel_center.setLayout(new FlowLayout());
+		panel_center_1 = new JPanel(new FlowLayout());
+		panel_center_1.setBackground(Color.BLUE);
+		panel_center_1.setBorder(new TitledBorder("FlowLayout"));
+		
+		panel_center_2 = new JPanel(new FlowLayout());
+		panel_center_2.setBackground(Color.BLUE);
+		panel_center_2.setBorder(new TitledBorder("FlowLayout"));
+		
+		panel_center_3 = new JPanel(new FlowLayout());
+		panel_center_3.setBackground(Color.BLUE);
+		panel_center_3.setBorder(new TitledBorder("FlowLayout"));
 		// east Panel
-		panel_east = new JPanel();
-		panel_east.setBackground(Color.blue);
-		panel_east.setLayout(new BorderLayout());
+		panel_east = new JPanel(new GridLayout(3,2));
+		panel_east.setBackground(Color.ORANGE);
+		panel_east.setBorder(new TitledBorder("GridLayout"));
 		// west Panel
-		panel_west = new JPanel(new BorderLayout());
+		panel_west = new JPanel(new GridLayout(3,2));
 		panel_west.setBackground(Color.red);
+		panel_west.setBorder(new TitledBorder("BorderLayout"));
 		// North Panel
-		panel_north = new JPanel();
+		panel_north = new JPanel(new FlowLayout());
 		panel_north.setBackground(Color.GREEN);
-		panel_north.setLayout(new FlowLayout());
 		// South Panel
-		panel_south = new JPanel();
+		panel_south = new JPanel(new FlowLayout());
 		panel_south.setBackground(Color.yellow);
-		panel_south.setLayout(new FlowLayout());
 		
 		// Texteingabe
 		text1 = new JTextField("Text:",5);
@@ -155,34 +170,38 @@ public class Sporttimer extends JFrame implements ActionListener, DocumentListen
 		text_area_input.getDocument().addDocumentListener(this);
 		
 		// EAST Panel aufbau
-		this.panel_east.add(text_area_input, BorderLayout.CENTER);
+		// NoNeed für 
+		//this.panel_east.add(text_area_input, BorderLayout.CENTER);
 		//this.panel_east.add(text1);
 		label_east_1 = new JLabel("Intervall-Dauer: ");
-		this.panel_east.add(label_east_1, BorderLayout.WEST);
-		this.panel_east.add(text_input_east_1, BorderLayout.EAST);
+		this.panel_east.add(label_east_1);
+		this.panel_east.add(text_input_east_1);
 		
 		label_east_2 = new JLabel("Intervall-Anzahl: ");
-		this.panel_east.add(label_east_2, BorderLayout.WEST);
-		this.panel_east.add(text_input_east_2, BorderLayout.EAST);
+		this.panel_east.add(label_east_2);
+		this.panel_east.add(text_input_east_2);
 		
 		label_east_3 = new JLabel("Pause-Dauer: ");
-		this.panel_east.add(label_east_3, BorderLayout.WEST);
-		this.panel_east.add(text_input_east_3, BorderLayout.EAST);
+		this.panel_east.add(label_east_3);
+		this.panel_east.add(text_input_east_3);
 		
 		
 		// WEST Panel aufbau
-		this.label_west_1 = new JLabel("Dauer");
-		this.label_west_2 = new JLabel("Anzahl");
-		this.label_west_3 = new JLabel("Pausen_dauer");
+		this.label_west_1 = new JLabel("Dauer",10);
+		this.label_west_2 = new JLabel("Anzahl", 10);
+		this.label_west_3 = new JLabel("Pausen_dauer", 10);
+		this.label_west_4 = new JLabel("");
+		this.label_west_5 = new JLabel("");
+		this.label_west_6 = new JLabel("");
 		this.jlist_1 = new JList<String>(list_1);
 		
-		this.panel_west.add(label_west_1, BorderLayout.WEST);
-		this.panel_west.add(label_west_2, BorderLayout.WEST);
-		this.panel_west.add(label_west_3, BorderLayout.WEST);
+		this.panel_west.add(label_west_1, BorderLayout.NORTH);
+		this.panel_west.add(label_west_2, BorderLayout.CENTER);
+		this.panel_west.add(label_west_3, BorderLayout.SOUTH);
 
 		// CENTER Panel aufbau
 		label_center_timer = new JLabel("Beginne mit Klick auf GO!");
-		this.panel_center.add(label_center_timer);
+		this.panel_center_1.add(label_center_timer);
 		
 		// Pause Button
 		button_pause = new JButton();
@@ -210,8 +229,11 @@ public class Sporttimer extends JFrame implements ActionListener, DocumentListen
 		String[] list_1 = {"Bitte wählen","Ohja!", "Übung 2"}; 
 		combo = new JComboBox<String>(list_1);
 		this.combo.setPreferredSize(new Dimension(100,20));
-		this.panel_center.add(combo);
+		this.panel_center_1.add(combo);
 		
+		this.panel_center.add(panel_center_1);
+		this.panel_center.add(panel_center_2);
+		this.panel_center.add(panel_center_3);
 		
 		// Elemente in Rheinfolge zusammenfügen 
 		this.add(panel_page_end, BorderLayout.PAGE_END);
@@ -269,7 +291,7 @@ public class Sporttimer extends JFrame implements ActionListener, DocumentListen
 		}
 	}
 	public void doBeep(){
-		new BeepAction();
+		new Beeper();
 		
 	}	
 	
@@ -284,6 +306,7 @@ public class Sporttimer extends JFrame implements ActionListener, DocumentListen
 			System.out.println("Bis bald!");
 			System.exit(0);
 		}else if(ev.getSource()==m_item1){
+			new Beeper();
 			System.out.println(list_1);
 			//start_timer_loop();
 		}else if(ev.getSource()==button_stop){
@@ -292,12 +315,12 @@ public class Sporttimer extends JFrame implements ActionListener, DocumentListen
 			this.start_timer();
 		}else if(ev.getSource()==button_get_text_list){
 			this.label_west_1.setText(this.text_input_east_1.getText());
-			this.getToolkit().beep();
+			doBeep();
 			this.ticks=Integer.parseInt(this.text_input_east_1.getText());
-			this.label_west_2.setText(this.text_input_east_2.getText());
 			this.intervall=Integer.parseInt(this.text_input_east_2.getText());
-			this.label_west_3.setText(this.text_input_east_3.getText());
 			this.pause=Integer.parseInt(this.text_input_east_3.getText());
+			this.label_west_2.setText(this.text_input_east_2.getText());
+			this.label_west_3.setText(this.text_input_east_3.getText());
 		}else if(ev.getSource()==button_get_text_list){
 			//this.jlist_1.se(this.text_area_input.getText());
 		}
